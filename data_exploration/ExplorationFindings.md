@@ -39,7 +39,7 @@
   - issue-time: evaluated_at_ept (vs evaluated_at_datetime_ept)
   - target-hour: forecast_hour_beginning_ept (vs forecast_datetime_beginning_ept)
   - area value: 'DOM' (vs 'DOMINION')
-- Load in 2011: ~9.8k; Load in 2026: ~16-17k
+- Load in 2026 has almost doubled since 2011
 
 ## Energy Generation by Fuel Type Exploration
 
@@ -58,6 +58,7 @@
 
 - Forecast data stored in a dictionary of parallel arrays, as opposed to PJM's use of row dictionaries
   - Will need to zip into rows
+  - Data starts in 2024
 - 'temperature_2m_previous_day1' (Temperature) in celsius
 - 'temperature_2m_previous_day1', 'wind_speed_10m_previous_day1', and 'cloud_cover_previous_day1' all forecasted and available day before, so not lagged for training
 
