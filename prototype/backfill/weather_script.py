@@ -14,7 +14,7 @@ params = {
     "longitude": -77.49,  # Longitude for Ashburn, VA (Heavy data-center concentration)
     "start_date": "2024-01-01",  # Start date for the forecast
     "end_date": "2026-07-01",  # End date for the forecast
-    "hourly": "temperature_2m_previous_day1,wind_speed_10m_previous_day1,cloud_cover_previous_day1",  # Features
+    "hourly": "temperature_2m_previous_day1,wind_speed_10m_previous_day1,cloud_cover_previous_day1,temperature_2m_previous_day2,wind_speed_10m_previous_day2,cloud_cover_previous_day2",  # Features
     "timezone": "America/New_York", 
 }
 # Fetching the necessary data
