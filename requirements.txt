@@ -5,3 +5,7 @@ pyarrow
 duckdb
 lightgbm
 scikit-learn
+holidays
+matplotlib
+numpy
+xgboost

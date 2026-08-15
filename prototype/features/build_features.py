@@ -6,6 +6,8 @@ Script to build tables and engineer features for prototype model training
 
 # Using duckdb to load parquet files and perform feature engineering
 import duckdb
+import pandas as pd
+import holidays
 
 con = duckdb.connect() # Connecting to duckdb
 
@@ -309,6 +311,26 @@ CREATE TABLE calendar_features AS
 con.sql("SELECT COUNT(*) FROM calendar_features").show()
 con.sql("SELECT * FROM calendar_features LIMIT 5").show()
 
+# Adding is_holiday
+
+us_holidays = holidays.US(years=range(2024, 2027))
+holiday_dates = pd.DataFrame({"holiday_date": list(us_holidays.keys())})
+
+con.register("holiday_dates_df", holiday_dates)
+con.sql("CREATE TABLE holiday_dates AS SELECT * FROM holiday_dates_df")
+
+# Adding it to calendar features
+con.sql("""
+CREATE OR REPLACE TABLE calendar_features AS
+SELECT
+    cf.*,
+    CASE WHEN hd.holiday_date IS NOT NULL THEN 1 ELSE 0 END AS is_holiday
+FROM calendar_features cf
+LEFT JOIN holiday_dates hd
+    ON CAST(cf.datetime_ept AS DATE) = hd.holiday_date
+""")
+
+
 # Lagged features quick test (1, 3, 7 days before prediction is made (2, 4, 8 days before the forecasted hour))
 
 con.sql("""
@@ -492,6 +514,7 @@ SELECT
     c.day_of_week,
     c.hour_of_day,
     c.is_weekend,
+    c.is_holiday,
     j.temperature_2m_selected,
     j.wind_speed_10m_selected,
     j.cloud_cover_selected,
@@ -515,11 +538,11 @@ con.sql("SELECT COUNT(*) FROM information_schema.columns WHERE table_name = 'fin
 con.sql("SELECT * FROM final_features ORDER BY datetime_ept DESC LIMIT 10").show()
 
 
-# Dropping Nulls that result from the lagged features from beginning days or daylight savings
+# Filtering out nulls
 con.sql("""
 CREATE OR REPLACE TABLE final_features AS
 SELECT * FROM final_features
-WHERE lagged_lmp_rt_7 IS NOT NULL
+WHERE COLUMNS(* EXCLUDE (datetime_ept)) IS NOT NULL
 """)
 con.sql("SELECT COUNT(*) FROM final_features").show()
 
@@ -529,6 +552,8 @@ con.sql("""
 SELECT COUNT(*) FROM final_features
 WHERE NOT (COLUMNS(* EXCLUDE (datetime_ept)) IS NOT NULL)::BOOL
 """).show()
+
+con.sql("SELECT COUNT(*) FROM final_features WHERE lagged_lmp_rt_1 IS NULL").show()
 
 # Converting to parquet for modeling
 

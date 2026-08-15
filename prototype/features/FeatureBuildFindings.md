@@ -19,7 +19,7 @@
 - Fuel mix pivoted (10 rows/hour into 10 columns, one per fuel type)
 
 ## Final table
-- 75 columns: label (total_lmp_rt) + 4 raw features (load, 3 weather features) + 4 calendar features + 63 lags + 2 rolling
-- 21,017 rows, zero nulls (verified across ALL columns, not sampled)
+- 76 columns: label (total_lmp_rt) + 4 raw features (load, 3 weather features) + 5 calendar features + 63 lags + 2 rolling
+- 20,815 rows, zero nulls (verified across ALL columns, not sampled)
 - Nulls dropped were from lagged values at the start of the timeframe and daylight savings time
 - Saved to data/training_table.parquet
