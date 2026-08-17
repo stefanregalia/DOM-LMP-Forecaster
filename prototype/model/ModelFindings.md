@@ -44,7 +44,7 @@ Train MAE $17.75 vs validation MAE $29.42
 
 ## Retraining
 
-Retraining will be quarterly (every 3 months), driven by the observed seasonal spike clustering (summer + winter) and the year-over-year growth in both load and spike severity. Each retrain: champion/challenger validation against the currently-deployed model before promoting.
+Retraining will be quarterly (every 3 months), driven by the observed seasonal spike clustering and the year-over-year growth in both load and spike severity. Each retrain: champion/challenger validation with significance test against the currently-deployed model before promoting.
 
 **To potentially be tested for the v2 model retraining:**
 - Wider regularization search range
